@@ -114,31 +114,46 @@
       }
 
       async function startCamera() {
-        try {
-          videoEl = document.getElementById('workout-video');
+  try {
+    console.log("1. Getting camera");
 
-          stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
-            audio: false,
-          });
+    videoEl = document.getElementById('workout-video');
 
-          videoEl.srcObject = stream;
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: 'user',
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    });
 
-          await videoEl.play();
+    console.log("2. Camera obtained");
 
-          document.getElementById('video-container').style.display = 'block';
+    videoEl.srcObject = stream;
 
-          await init();
+    await videoEl.play();
 
-          isRunning = true;
-          _loop();
+    console.log("3. Video playing");
 
-          return 'ok';
-        } catch (e) {
-          console.error("Camera start failed:", e);
-          return 'error:' + e.message;
-        }
-      }
+    document.getElementById('video-container').style.display = 'block';
+
+    console.log("4. Calling init()");
+
+    await init();
+
+    console.log("5. init() completed");
+
+    isRunning = true;
+    _loop();
+
+    return 'ok';
+  } catch (e) {
+    console.error("Camera start failed:", e);
+    console.error("Stack:", e.stack);
+    return 'error:' + e.message;
+  }
+}
 
       async function _loop() {
         if (!isRunning || !detector || !videoEl) return;
